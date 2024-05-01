@@ -9,8 +9,7 @@ namespace WebAPICRUD_Escola.Services.Escola
         Task<ServiceResponce<EscolaModel>> GetEscolaById(int id);
         Task<ServiceResponce<List<EscolaModel>>> UpdateEscola(EscolaModel editadoEscola);
         Task<ServiceResponce<List<EscolaModel>>> DeleteEscolaModel(int id);
-        Task ProcessExcelFileAsync(Stream fileStream);
-
+        Task<bool> UploadExcel(Stream fileStream);
 
         ///Task<ServiceResponce<List<EscolaModel>>> InativaEscolaModel(int id);
     }

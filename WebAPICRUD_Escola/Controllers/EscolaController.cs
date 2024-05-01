@@ -45,24 +45,22 @@ namespace WebAPICRUD_Escola.Controllers
             return Ok(serviceResponse);
         }
 
-        [HttpPost("upload_Excel")]
-        public async Task<IActionResult> UploadExcelFile([FromForm] IFormFile file)
+        [HttpPost("upload")]
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> UploadExcel([FromForm] IFormFile file)
         {
-            
-            if (file == null || file.Length <= 0)
-            {
-                return BadRequest("Arquivo inválido.");
-            }
+            if (file == null || file.Length == 0)
+                return BadRequest("Nenhum arquivo enviado.");
 
-            try
-            {
-                await _escolaInterface.ProcessExcelFileAsync(file.OpenReadStream());
-                return Ok("Arquivo Excel carregado com sucesso.");
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Erro ao processar o arquivo Excel: {ex.Message}");
-            }
+            if (Path.GetExtension(file.FileName) != ".xlsx")
+                return BadRequest("O arquivo deve ser do tipo Excel (.xlsx).");
+
+            var success = await _escolaInterface.UploadExcel(file.OpenReadStream());
+
+            if (success)
+                return Ok("Dados carregados com sucesso.");
+            else
+                return StatusCode(500, "Erro ao carregar os dados.");
         }
 
 

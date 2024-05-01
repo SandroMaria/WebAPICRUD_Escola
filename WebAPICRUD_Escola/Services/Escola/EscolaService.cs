@@ -167,5 +167,40 @@ namespace WebAPICRUD_Escola.Services.Escola
 
             return serviceResponse;
         }
+
+        public async Task<bool> UploadExcel(Stream fileStream)
+        {
+            try
+            {
+                using var package = new ExcelPackage(fileStream);
+                var worksheet = package.Workbook.Worksheets.FirstOrDefault(); // Obtenha a primeira planilha
+                if (worksheet == null)
+                    throw new Exception("Nenhuma planilha encontrada no arquivo.");
+
+                int rowCount = worksheet.Dimension.Rows;
+
+                for (int row = 2; row <= rowCount; row++) // Ignora o cabeçalho na primeira linha
+                {
+                    var escola = new EscolaModel
+                    {
+                        Nome = worksheet.Cells[row, 1].Value?.ToString(),
+                        Email = worksheet.Cells[row, 2].Value?.ToString(),
+                        Provincia = worksheet.Cells[row, 3].Value?.ToString(),
+                        NumSalas = Convert.ToInt32(worksheet.Cells[row, 4].Value)
+                    };
+
+                    _context.Escolas.Add(escola);
+                }
+
+                await _context.SaveChangesAsync();
+
+                return true; // Retorna verdadeiro se o carregamento for bem-sucedido
+            }
+            catch (Exception ex)
+            {
+                // Logue o erro ou trate conforme necessário
+                return false; // Retorna falso se ocorrer um erro durante o carregamento
+            }
+        }
     }
 }
