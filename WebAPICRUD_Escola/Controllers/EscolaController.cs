@@ -45,6 +45,17 @@ namespace WebAPICRUD_Escola.Controllers
             return Ok(serviceResponse);
         }
 
+
+
+        [HttpDelete]
+        public async Task<ActionResult<ServiceResponce<List<EscolaModel>>>> DeleteEscola(int id)
+        {
+            ServiceResponce<List<EscolaModel>> serviceResponse = await _escolaInterface.DeleteEscolaModel(id);
+
+            return Ok(serviceResponse);
+
+        }
+
         [HttpPost("upload")]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> UploadExcel([FromForm] IFormFile file)

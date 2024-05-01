@@ -46,6 +46,11 @@ namespace WebAPICRUD_Escola.Services.Escola
             return serviceResponse;
         }
 
+        public Task<ServiceResponce<List<EscolaModel>>> DeleteEscola(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<ServiceResponce<List<EscolaModel>>> DeleteEscolaModel(int id)
         {
             throw new NotImplementedException();
