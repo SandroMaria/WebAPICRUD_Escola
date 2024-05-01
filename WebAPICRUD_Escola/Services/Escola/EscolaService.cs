@@ -51,9 +51,38 @@ namespace WebAPICRUD_Escola.Services.Escola
             throw new NotImplementedException();
         }
 
-        public Task<ServiceResponce<List<EscolaModel>>> DeleteEscolaModel(int id)
+        public async Task<ServiceResponce<List<EscolaModel>>> DeleteEscolaModel(int id)
         {
-            throw new NotImplementedException();
+            ServiceResponce<List<EscolaModel>> serviceResponse = new ServiceResponce<List<EscolaModel>>();
+
+            try
+            {
+                EscolaModel escola = _context.Escolas.FirstOrDefault(x => x.id == id);
+
+                if (escola == null)
+                {
+                    serviceResponse.Dados = null;
+                    serviceResponse.Mensagem = "Escola não localizado!";
+                    serviceResponse.Sucesso = false;
+
+                    return serviceResponse;
+                }
+
+
+                _context.Escolas.Remove(escola);
+                await _context.SaveChangesAsync();
+
+
+                serviceResponse.Dados = _context.Escolas.ToList();
+
+            }
+            catch (Exception ex)
+            {
+                serviceResponse.Mensagem = ex.Message;
+                serviceResponse.Sucesso = false;
+            }
+
+            return serviceResponse;
         }
 
         public async Task<ServiceResponce<EscolaModel>> GetEscolaById(int id)
@@ -67,7 +96,7 @@ namespace WebAPICRUD_Escola.Services.Escola
                 if (escola == null)
                 {
                     serviceResponse.Dados = null;
-                    serviceResponse.Mensagem = "Usuário não localizado!";
+                    serviceResponse.Mensagem = "Escola não localizado!";
                     serviceResponse.Sucesso = false;
                 }
 
@@ -154,7 +183,7 @@ namespace WebAPICRUD_Escola.Services.Escola
                 if (escola == null)
                 {
                     serviceResponse.Dados = null;
-                    serviceResponse.Mensagem = "Usuário não localizado!";
+                    serviceResponse.Mensagem = "Escola não localizado!";
                     serviceResponse.Sucesso = false;
                 }
 
